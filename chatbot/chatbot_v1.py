@@ -47,17 +47,20 @@ workflow = graph.compile(checkpointer=memory)
 
 # Chatbot Invoke
 
-while True:
+if __name__ == '__main__':
 
-    config = {'configurable': {'thread_id': thread}}
 
-    user_resp = input('Enter a message: ')
-    print(f'User: {user_resp}')
+    while True:
 
-    if user_resp.strip().lower() in ['exit', 'quit']:
-        break
+        config = {'configurable': {'thread_id': thread}}
 
-    resp = workflow.invoke({'messages': [HumanMessage(content=user_resp)]}, config=config)
-    print(f"AI: {resp['messages'][-1].content}")
+        user_resp = input('Enter a message: ')
+        print(f'User: {user_resp}')
+
+        if user_resp.strip().lower() in ['exit', 'quit']:
+            break
+
+        resp = workflow.invoke({'messages': [HumanMessage(content=user_resp)]}, config=config)
+        print(f"AI: {resp['messages'][-1].content}")
 
 
