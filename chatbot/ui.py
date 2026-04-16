@@ -1,15 +1,36 @@
 import streamlit as st
 from chatbot_v1 import workflow
 from langchain_core.messages import HumanMessage
+import uuid
 
-CONFIG = {'configurable': {'thread_id': 1}}
+# Utility functions
+
+def generate_thread():
+    thread = uuid.uuid4()
+    return thread
 
 if 'messages' not in st.session_state:
     st.session_state.messages = []
 
+if 'thread' not in st.session_state:
+    st.session_state.thread = generate_thread()
+
+st.sidebar.title('Langbot')
+
+st.sidebar.button('New Chat')
+
+st.sidebar.header('My Conversations')
+
+st.sidebar.text(st.session_state.thread)
+
+
 for message in st.session_state.messages:
     with st.chat_message(message['role']):
         st.text(message['content'])
+
+
+CONFIG = {'configurable': {'thread_id': st.session_state.thread}}
+
 
 user_input = st.chat_input('Type here...')
 
