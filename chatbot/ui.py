@@ -12,13 +12,26 @@ def generate_thread():
 def reset_chat():
     thread_id = generate_thread()
     st.session_state.thread = thread_id
+    add_thread(st.session_state.thread)
     st.session_state.messages = []
+
+def add_thread(thread_id):
+    if thread_id not in st.session_state.chat_threads:
+        st.session_state.chat_threads.append(thread_id)
+
+def load_conversation(thread_id):
+    return workflow.get_state(config={'configurable': {'thread_id': thread_id}}).values['messages']
 
 if 'messages' not in st.session_state:
     st.session_state.messages = []
 
 if 'thread' not in st.session_state:
     st.session_state.thread = generate_thread()
+
+if 'chat_threads' not in st.session_state:
+    st.session_state.chat_threads = []
+
+add_thread(st.session_state.thread)
 
 st.sidebar.title('Langbot')
 
@@ -27,7 +40,21 @@ if st.sidebar.button('New Chat'):
 
 st.sidebar.header('My Conversations')
 
-st.sidebar.text(st.session_state.thread)
+for thread_id in st.session_state.chat_threads[::-1]:
+    if st.sidebar.button(str(thread_id)):
+        st.session_state.thread = thread_id
+        messages = load_conversation(thread_id)
+
+
+        temp_msg = []
+        for msg in messages:
+            if isinstance(msg, HumanMessage):
+                role = 'user'
+            else:
+                role = 'assistant'
+            temp_msg.append({'role': role, 'content': msg.content})
+
+        st.session_state.messages = temp_msg
 
 
 for message in st.session_state.messages:
