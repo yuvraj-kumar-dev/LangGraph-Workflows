@@ -9,6 +9,11 @@ def generate_thread():
     thread = uuid.uuid4()
     return thread
 
+def reset_chat():
+    thread_id = generate_thread()
+    st.session_state.thread = thread_id
+    st.session_state.messages = []
+
 if 'messages' not in st.session_state:
     st.session_state.messages = []
 
@@ -17,7 +22,8 @@ if 'thread' not in st.session_state:
 
 st.sidebar.title('Langbot')
 
-st.sidebar.button('New Chat')
+if st.sidebar.button('New Chat'):
+    reset_chat()
 
 st.sidebar.header('My Conversations')
 
