@@ -3,7 +3,8 @@ from langchain_ollama import ChatOllama
 from typing import TypedDict, Annotated
 from langchain_core.messages import BaseMessage, HumanMessage
 from langgraph.graph.message import add_messages
-from langgraph.checkpoint.memory import MemorySaver
+from langgraph.checkpoint.sqlite import SqliteSaver
+import sqlite3
 
 # Load LLM
 
@@ -38,12 +39,22 @@ graph.add_node('chatbot', chatbot)
 graph.add_edge(START, 'chatbot')
 graph.add_edge('chatbot', END)
 
+# Database
+
+conn = sqlite3.connect(database='chatbot.db', check_same_thread=False)
+
 # Compile
 
 thread = 1 
-memory = MemorySaver()
+memory = SqliteSaver(conn=conn)
 
 workflow = graph.compile(checkpointer=memory)
+
+def retrieve_threads():
+    all_threads = set()
+    for checkpoint in memory.list(None):
+        all_threads.add(checkpoint.config['configurable']['thread_id'])
+    return list(all_threads)
 
 # Chatbot Invoke
 
