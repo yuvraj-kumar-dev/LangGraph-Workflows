@@ -38,3 +38,42 @@ This folder builds the **foundation for observability**, which is critical befor
 
 ---
 
+## ⚙️ Setup Instructions
+
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/yuvraj-kumar-dev/LangGraph-Workflows.git
+cd LangGraph-Workflows/langsmith
+```
+
+### 2. Configure Environment Variables
+
+#### Create a .env file in this folder and add:
+
+```
+GROQ_API_KEY="your-groq-api-key"
+LANGCHAIN_API_KEY="your-langsmith-api-key"
+LANGCHAIN_TRACING=true
+LANGCHAIN_ENDPOINT="https://api.smith.langchain.com"
+LANGCHAIN_PROJECT="your-project-name"
+```
+
+### ▶️ Running Examples
+
+Run any script:
+```
+python filename.py
+```
+Once executed, traces will automatically appear in your LangSmith dashboard.
+
+
+### 📈 Viewing Traces
+Go to: https://smith.langchain.com
+Open your project (LANGCHAIN_PROJECT)
+
+Explore:
+- Execution graphs
+- Inputs/outputs
+- Latency breakdown
+- Debug traces
